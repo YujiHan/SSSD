@@ -1,47 +1,36 @@
-# Diffusion-based Time Series Imputation and Forecasting with Structured State Space Models
-
-
-This is the official repository for the paper [Diffusion-based Time Series Imputation and Forecasting with Structured State Space Models](https://openreview.net/forum?id=hHiIbk7ApW&referrer=%5BTMLR%5D(%2Fgroup%3Fid%3DTMLR)) <ins>accepted by TMLR</ins> . In combination with (conditional) diffusion and state-space models, we put forward diverse algorithms, particualary, we propose the generative model $`SSSD^{S4}`$, which is suited to capture long-term dependencies and demonstrates ***state-of-the-art*** results in time series across diverse missing scenarios and datasets. 
-
-## Datasets and experiments
-Visit the source directory to get datasets download and experiments reproducibility instructions. (here is an [example](https://github.com/AI4HealthUOL/SSSD/blob/main/docs/instructions/PEMS-Bay%20and%20METR-LA/feature_sample_process.ipynb) of the feature sampling approach for the datasets with large number of channels )
-
-
-## Our proposed $`SSSD^{S4}`$ model architecture:
-![alt text](https://github.com/AI4HealthUOL/SSSD/blob/main/reports/updated_architecture.png?style=centerme)
-
-## $`SSSD^{S4}`$ robustness on diverse scenarios:
-
-### Random Missing
-![alt text](https://github.com/AI4HealthUOL/SSSD/blob/main/reports/plots_merged_001.png?style=centerme)
-
-### Missing not at random
-![alt text](https://github.com/AI4HealthUOL/SSSD/blob/main/reports/plots_merged_002.png?style=centerme)
-
-### Black-out missing
-![alt text](https://github.com/AI4HealthUOL/SSSD/blob/main/reports/plots_merged_003.png?style=centerme)
-
-### Forecast
-![alt text](https://github.com/AI4HealthUOL/SSSD/blob/main/reports/plots_merged_004.png?style=centerme)
-
-
-
-
-### Please cite our publication if you found our research to be helpful.
-
-```bibtex
-@article{
-lopez alcaraz2022diffusionbased,
-title={Diffusion-based Time Series Imputation and Forecasting with Structured State Space Models},
-author={Juan Lopez Alcaraz and Nils Strodthoff},
-journal={Transactions on Machine Learning Research},
-issn={2835-8856},
-year={2022},
-url={https://openreview.net/forum?id=hHiIbk7ApW},
-}
-
+## Install the requiered libraries 
+```
+pip install -r requirements.txt
 ```
 
-### Acknowledgments
-We would like thank the authors of the the S4 model for releasing and maintaining the
-source code for [Structured State Space Models](https://github.com/HazyResearch/state-spaces). Similarly, our proposed model code builds on the implementation provided by [DiffWave](https://github.com/philsyn/DiffWave-Vocoder).
+
+## Datasets
+* Visit the docs/instructions/ directory to find the pre-processing steps or instructions of each of them, either we processed them or collected from providers. 
+* Visit the docs/instructions/PTB/ if you would like to use the PTB-XL ECG class-labels and other metadata for your research.
+* By convenience, all the dataset implemented in our experiment are available in [this link](https://mega.nz/folder/kT91jYpI#97GyTkVVUk97fzs1Oy4nBQ).
+* Similarly you can download and store them with the next command. Allow 6.28 GB.
+```
+python3 get_data.py
+```
+
+
+## How to use the models
+## $SSSD^{S4}$ and $SSSD^{SA}$ 
+can be accesed through the command line, use their respective configuration files from the config/ directory. Load and reshape the datasets into the train.py and inference.py files accordly. 
+
+
+## $CSDI^{S4}$ 
+can be accesed as a python module in a notebook, with three main attributions:
+```
+from CSDIS4 import CSDIS4Imputer
+imputer = CSDIS4Imputer()
+imputer.train(data, masking, missing_ratio, batch_size) # for training
+imputer.load_weights('path_to_model', 'path_to_config') # after training
+imputations = imputer.impute(data, mask, number_of_samples) # sampling
+```
+
+## Fast experiment - Mujoco dataset 90% random missing
+```
+python3 train.py -c config/config_SSSDS4.json
+python3 inference.py -c config/config_SSSDS4.json
+```
