@@ -218,6 +218,7 @@ def training_loss(net, loss_fn, X, diffusion_hyperparams, only_generate_missing=
     z = std_normal(audio.shape)
     if only_generate_missing == 1:
         z = audio * mask.float() + z * (1 - mask).float()
+
     transformed_X = (
         torch.sqrt(Alpha_bar[diffusion_steps]) * audio
         + torch.sqrt(1 - Alpha_bar[diffusion_steps]) * z
